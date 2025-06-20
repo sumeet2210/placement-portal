@@ -19,19 +19,24 @@ const companySchema = new Schema({
         required: true
     },
     address: {
-        type: String
+        type: String,
+        required: true
     },
     website: {
-        type: String
+        type: String,
+        required: true
     },
     description: {
-        type: String
+        type: String,
+        required: true
     },
     contactPerson: {
-        type: String
+        type: String,
+        required: true
     },
     contactNumber: {
-        type: String
+        type: String,
+        required: true
     },
     jobs: [{
         type: Schema.Types.ObjectId,
@@ -41,6 +46,10 @@ const companySchema = new Schema({
         type: String,
         enum: ['pending', 'approved', 'rejected'],
         default: 'pending'
+    },
+    companyfield: {
+        type: String,
+        required: true
     }
 }, { timestamps: true });
 

@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-const userschema = new Schema({
+
+const studentschema = new Schema({
     fullname:{
         type: String,
         required:true,
@@ -45,11 +46,11 @@ const userschema = new Schema({
         index:true,
     }
 })
-userschema.pre("save", async function (next) {
+studentschema.pre("save", async function (next) {
     if (!this.isModified("password")) {
         return next();
     }
     this.password = await bcrypt.hash(this.password, 10);
     next();
 });
-export default mongoose.model("User", userschema);
+export default mongoose.model("Student", userschema);
