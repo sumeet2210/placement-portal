@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Placement Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+        <div class="user-type-group">
+            <label><input type="radio" name="userType" value="admin"> Admin</label>
+            <label><input type="radio" name="userType" value="company"> Company</label>
+            <label><input type="radio" name="userType" value="student" checked> Student</label>
+        </div>
+        <form>
+            <!-- Admin fields -->
+            <div id="admin-fields" class="user-fields" style="display:none;">
+                <label for="admin-email">Email</label>
+                <input type="email" id="admin-email" name="admin-email" required>
+
+                <label for="admin-name">Name</label>
+                <input type="text" id="admin-name" name="admin-name" required>
+
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" name="admin-password" required>
+
+                <label for="admin-secret">Admin Secret Code</label>
+                <input type="password" id="admin-secret" name="admin-secret" required>
+            </div>
+            <!-- Company fields -->
+            <div id="company-fields" class="user-fields" style="display:none;">
+                <label for="company-name">Company Name</label>
+                <input type="text" id="company-name" name="company-name" required>
+
+                <label for="company-email">Company Email</label>
+                <input type="email" id="company-email" name="company-email" required>
+
+                <label for="company-password">Password</label>
+                <input type="password" id="company-password" name="company-password" required>
+
+                <label for="company-core">Core For Which Branch</label>
+                <select id="company-core" name="company-core" required>
+                    <option value="" disabled selected>Select Branch</option>
+                    <option value="chemical">Chemical</option>
+                    <option value="cse">Computer Science and Engineering (CSE)</option>
+                    <option value="mech">Mechanical</option>
+                    <option value="civil">Civil</option>
+                    <option value="metallurgy">Metallurgy</option>
+                    <option value="ece">Electronics and Communication Engineering (ECE)</option>
+                    <option value="eee">Electrical and Electronics Engineering (EEE)</option>
+                    <option value="mathematics">Mathematics and Computing</option>
+                    <option value="aids">Artificial Intelligence and Data Science (AIDS)</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+            <!-- Student fields -->
+            <div id="student-fields" class="user-fields">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="rollno">Roll No</label>
+                <input type="text" id="rollno" name="rollno" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+                <label for="year">Year</label>
+                <select id="year" name="year" required>
+                    <option value="" disabled selected>Select Year</option>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+
+                <label for="branch">Branch</label>
+                <select id="branch" name="branch" required>
+                    <option value="" disabled selected>Select Branch</option>
+                    <option value="chemical">Chemical</option>
+                    <option value="cse">Computer Science and Engineering (CSE)</option>
+                    <option value="mech">Mechanical</option>
+                    <option value="civil">Civil</option>
+                    <option value="metallurgy">Metallurgy</option>
+                    <option value="ece">Electronics and Communication Engineering (ECE)</option>
+                    <option value="eee">Electrical and Electronics Engineering (EEE)</option>
+                    <option value="mathematics">Mathematics and Computing</option>
+                    <option value="aids">Artificial Intelligence and Data Science (AIDS)</option>
+                    <option value="none">None</option>
+                </select>
+
+                <label for="course">UG/PG</label>
+                <select id="course" name="course" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="UG">UG</option>
+                    <option value="PG">PG</option>
+                </select>
+
+                <label for="profilePhoto">Profile Photo</label>
+                <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" required>
+
+                <label>Gender</label>
+                <div class="gender-group">
+                    <label><input type="radio" name="gender" value="male" required> Male</label>
+                    <label><input type="radio" name="gender" value="female" required> Female</label>
+                    <label><input type="radio" name="gender" value="other" required> Other</label>
+                </div>
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+    </div>
+    <script>
+        const userTypeRadios = document.querySelectorAll('input[name="userType"]');
+        const adminFields = document.getElementById('admin-fields');
+        const companyFields = document.getElementById('company-fields');
+        const studentFields = document.getElementById('student-fields');
+
+        function updateUserFields() {
+            const selected = document.querySelector('input[name="userType"]:checked');
+            if (selected && selected.value === 'admin') {
+                adminFields.style.display = 'block';
+                companyFields.style.display = 'none';
+                studentFields.style.display = 'none';
+            } else if (selected && selected.value === 'company') {
+                adminFields.style.display = 'none';
+                companyFields.style.display = 'block';
+                studentFields.style.display = 'none';
+            } else {
+                adminFields.style.display = 'none';
+                companyFields.style.display = 'none';
+                studentFields.style.display = 'block';
+            }
+        }
+        userTypeRadios.forEach(radio => {
+            radio.addEventListener('change', updateUserFields);
+        });
+        // Set initial state on page load
+        updateUserFields();
+    </script>
+</body>
+</html>

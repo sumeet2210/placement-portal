@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Placement Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    
+    
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="login-type-group">
+                <label>
+                    <input type="radio" name="loginType" value="admin">
+                    Admin
+                </label>
+                <label>
+                    <input type="radio" name="loginType" value="company">
+                    Company
+                </label>
+                <label>
+                    <input type="radio" name="loginType" value="student" checked>
+                    Student
+                </label>
+            </div>
+            <div id="adminSecretField" style="display:none;">
+                <input type="text" name="adminSecret" placeholder="Admin Secret Code">
+            </div>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+    <script>
+        const loginTypeRadios = document.querySelectorAll('input[name="loginType"]');
+        const adminSecretField = document.getElementById('adminSecretField');
+        function updateAdminSecretField() {
+            const selected = document.querySelector('input[name="loginType"]:checked');
+            if (selected && selected.value === 'admin') {
+                adminSecretField.style.display = 'block';
+                adminSecretField.querySelector('input').setAttribute('required', 'required');
+            } else {
+                adminSecretField.style.display = 'none';
+                adminSecretField.querySelector('input').removeAttribute('required');
+            }
+        }
+        loginTypeRadios.forEach(radio => {
+            radio.addEventListener('change', updateAdminSecretField);
+        });
+        // Set initial state on page load
+        updateAdminSecretField();
+    </script>
+</body>
+</html>
