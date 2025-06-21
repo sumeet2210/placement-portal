@@ -12,9 +12,7 @@ const studentschema = new Schema({
     email:{
         type:String,
         required:true,
-        index:true,
         unique:true,
-        trim:true,
         lowercase:true,
     },
     branch:{
@@ -44,7 +42,11 @@ const studentschema = new Schema({
         type:String,
         required:true,
         index:true,
-    }
+    },
+    usermodel: {
+        type: String,
+        default: "student",
+    },
 })
 studentschema.pre("save", async function (next) {
     if (!this.isModified("password")) {

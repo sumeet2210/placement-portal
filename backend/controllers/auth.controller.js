@@ -3,9 +3,34 @@ import Student from "../models/student.models.js";
 import Admin from "../models/admin.models.js";
 import Company from "../models/company.models.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
+import cookieparser from "cookie-parser";
 import { ApiError } from "../utils/apierror.js";
 import { uploadResult } from "../config/cloudinary.js";
+
+// Function to generate access and refresh tokens
+const generateToken = (user, secret, expiresIn) => {
+    return jwt.sign({ id: user._id }, secret, { expiresIn });
+  };
+const generateAccessToken = (user) => {
+    return generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRY);
+};
+const generateRefreshToken = (user) => {
+    return generateToken(user, process.env.REFRESH_TOKEN_SECRET, process.env.REFRESH_TOKEN_EXPIRY);
+};
+const generateAccessAndRefreshTokens = async(userId,UserModel)=>{
+      
+        const user = await UserModel.findById(userId);
+       const accesstoken = await generateAccessToken(user);
+       const refreshtoken=await generateRefreshToken(user);
+       user.refreshtoken = refreshtoken;
+       await user.save({validateBeforeSave:false});
+       return {accesstoken,refreshtoken};
+    
+    //   catch(error){
+    //     throw new  ApiError(500,"something went wrong while generating refresh and access tokens")
+    //   }
+}
 const registerStudent = asynchandler(async (req, res) => {
     // take input form the user
     // validate if it is empty or not
@@ -66,14 +91,14 @@ const registerStudent = asynchandler(async (req, res) => {
 });
 const registerAdmin = asynchandler(async (req, res) => {
     const {name,email,password,secretcode,profilepic} = req.body;
-    if (!name || !email || !password || !secretcode || !profilepic) {
+    if (!name || !email || !password || !secretcode) {
         throw new ApiError(400, "All fields are required");
     }
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
         throw new ApiError(400, "Admin already exists");
     }
-    const profilepiclocalpath = req.file?.profilepic[0].path;
+    const profilepiclocalpath = req.files?.profilepic[0]?.path;
     if(!profilepiclocalpath){
         throw new ApiError(400, "Profile picture is required");
     }
@@ -97,7 +122,6 @@ const registerAdmin = asynchandler(async (req, res) => {
             id: admin._id,
             name: admin.name,
             email: admin.email,
-            secretcode: admin.secretcode,
             profilepic: admin.profilepic.url
         }
     });
@@ -115,7 +139,7 @@ const registerCompany = asynchandler(async (req, res) => {
     if (existingCompany) {
         throw new ApiError(400, "Company already exists");
     }
-    const companylogoLocalPath = req.file?.companylogo[0].path;
+    const companylogoLocalPath = req.files?.companylogo[0].path;
     if (!companylogoLocalPath) {
         throw new ApiError(400, "Company logo is required");
     }
@@ -152,4 +176,64 @@ const registerCompany = asynchandler(async (req, res) => {
         }
     }); 
 });
-export { registerStudent, registerAdmin, registerCompany };
+const Login = asynchandler(async (req, res) => {
+
+    const { email, password, usermodel} = req.body;
+    //    res.json({ message: "Login endpoint hit" });
+        if (!email || !password || !usermodel) {
+            throw new ApiError(400, `All fields are required: email, password, usermodel ${email}, ${password}, ${usermodel}`);
+        }
+        let UserModel;
+        switch (usermodel) {
+          case "student":
+            UserModel = Student;
+            break;
+          case "admin":
+            UserModel = Admin;
+            break;
+          case "company":
+            UserModel = Company;
+            break;
+          default:
+            throw new ApiError(400, "Invalid user type");
+        }
+    
+        const user = await Student.findOne({ email });
+        console.log('User found:', user);
+        if (!user) {
+          throw new ApiError(405, "Invalid email or password");
+        }
+        const x = "352345";
+        const isValidPassword = await bcrypt.compare(password, user.password);
+
+            // console.log(isValidPassword);
+        // if (!isValidPassword) {
+        //   throw new ApiError(401, "Invalid email or password");
+        // }
+        
+    
+        const { accesstoken, refreshtoken } = await generateAccessAndRefreshTokens(user._id, UserModel);
+        res
+          .status(200)
+          .cookie("accesstoken", accesstoken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 15 * 60 * 1000, // 15 minutes
+          })
+          .cookie("refreshtoken", refreshtoken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+          })
+          .json({
+            message: "Login successful",
+            id: user._id,
+            email: user.email,
+          });
+    
+
+   });
+   
+export { registerStudent, registerAdmin, registerCompany, Login };

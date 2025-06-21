@@ -22,7 +22,7 @@ const adminmodel = new Schema({
         index: true,
         unique: true
     },
-    role: {
+    usermodel: {
         type: String,
         default: "admin"
     },
