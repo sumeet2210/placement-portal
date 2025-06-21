@@ -9,11 +9,10 @@ app.use(cors({
     credentials:true,
 }))
 app.use(express.json({limit:"16kb"}))
-app.use(express.urlencoded({extended:true,limit:"256kb"}));
+app.use(express.urlencoded({extended:true,limit:"16kb"}));
 app.use(express.static("public"))
 app.use(cookieparser());
 
-
-
-
+import authRoutes from "./routes/auth.routes.js";
+app.use("/api/v1", authRoutes);
 export { app };

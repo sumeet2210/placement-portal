@@ -53,4 +53,4 @@ studentschema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, 10);
     next();
 });
-export default mongoose.model("Student", userschema);
+export default mongoose.model("Student", studentschema);

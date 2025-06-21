@@ -25,6 +25,10 @@ const adminmodel = new Schema({
     role: {
         type: String,
         default: "admin"
+    },
+    profilepic: {
+        type: String,
+       required: true,
     }
 }, { timestamps: true });
 

@@ -1,10 +1,11 @@
-import asynchandler from "../utils/asynchandler";
+import asynchandler from "../utils/asynchandler.js";
 import Student from "../models/student.models.js";
 import Admin from "../models/admin.models.js";
 import Company from "../models/company.models.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { ApiError } from "../utils/apierror";
+import { ApiError } from "../utils/apierror.js";
+import { uploadResult } from "../config/cloudinary.js";
 const registerStudent = asynchandler(async (req, res) => {
     // take input form the user
     // validate if it is empty or not
@@ -16,15 +17,24 @@ const registerStudent = asynchandler(async (req, res) => {
 
     const { fullname, email, branch, year, password, gender, profilepic, rollno } = req.body;
 
-    if (!fullname || !email || !branch || !year || !password || !gender || !profilepic || !rollno) {
-        throw new ApiError(400, "All fields are required");
+    if (!fullname || !email || !branch || !year || !password || !gender || !rollno) {
+        throw new ApiError(400, `all fields are required ${profilepic}`);
     }
 
     const existingStudent = await Student.findOne({
         $or: [{ email }, { rollno }]
     });
-    if (existingStudent) {
+     if (existingStudent) {
         throw new ApiError(400, "Student already exists");
+    }
+    const profilepiclocalpath = req.files?.profilepic[0]?.path;
+    if(!profilepiclocalpath){
+        throw new ApiError(405, "Profile picture is required");
+    }
+    const profile = await uploadResult(profilepiclocalpath);
+
+    if (!profile) {
+        throw new ApiError(400, `Profile picture upload failed ${profile}`);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -35,14 +45,11 @@ const registerStudent = asynchandler(async (req, res) => {
         year,
         password: hashedPassword,
         gender,
-        profilepic,
+        profilepic: profile.url,
         rollno
     });
 
     await student.save();
-
-    const token = jwt.sign({ id: student._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
-
     res.status(201).json({
         message: "Student registered successfully",
         student: {
@@ -52,20 +59,27 @@ const registerStudent = asynchandler(async (req, res) => {
             branch: student.branch,
             year: student.year,
             gender: student.gender,
-            profilepic: student.profilepic,
+            profilepic: student.profilepic.url,
             rollno: student.rollno
-        },
-        token
+        }
     }); 
 });
 const registerAdmin = asynchandler(async (req, res) => {
-    const {name,email,password,secretcode} = req.body;
-    if (!name || !email || !password || !secretcode) {
+    const {name,email,password,secretcode,profilepic} = req.body;
+    if (!name || !email || !password || !secretcode || !profilepic) {
         throw new ApiError(400, "All fields are required");
     }
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
         throw new ApiError(400, "Admin already exists");
+    }
+    const profilepiclocalpath = req.file?.profilepic[0].path;
+    if(!profilepiclocalpath){
+        throw new ApiError(400, "Profile picture is required");
+    }
+    const profile = await uploadResult(profilepiclocalpath);
+    if (!profile) {
+        throw new ApiError(400, "Profile picture upload failed");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     if(secretcode===process.env.ADMIN_SECRET_CODE){
@@ -73,19 +87,19 @@ const registerAdmin = asynchandler(async (req, res) => {
         name,
         email,
         password: hashedPassword,
-        secretcode
+        secretcode,
+        profilepic: profile.url
     });
     await admin.save();
-    const token = await jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
     res.status(201).json({
         message: "Admin registered successfully",
         admin: {
             id: admin._id,
             name: admin.name,
             email: admin.email,
-            secretcode: admin.secretcode
-        },
-        token
+            secretcode: admin.secretcode,
+            profilepic: admin.profilepic.url
+        }
     });
 }
 else{
@@ -93,13 +107,21 @@ else{
 }
 });
 const registerCompany = asynchandler(async (req, res) => {
-    const { name, email, password, address, website, description, contactPerson, contactNumber, companyfield } = req.body;
-    if (!name || !email || !password || !address || !website || !description || !contactPerson || !contactNumber || !companyfield) {
+    const { name, email, password, address, website, description, contactPerson, contactNumber, companyfield, companylogo } = req.body;
+    if (!name || !email || !password || !address || !website || !description || !contactPerson || !contactNumber || !companyfield || !companylogo) {
         throw new ApiError(400, "All fields are required");
     }
     const existingCompany = await Company.findOne({ email });
     if (existingCompany) {
         throw new ApiError(400, "Company already exists");
+    }
+    const companylogoLocalPath = req.file?.companylogo[0].path;
+    if (!companylogoLocalPath) {
+        throw new ApiError(400, "Company logo is required");
+    }
+    const logo = await uploadResult(companylogoLocalPath);
+    if (!logo) {
+        throw new ApiError(400, "Company logo upload failed");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const company = new Company({
@@ -111,10 +133,10 @@ const registerCompany = asynchandler(async (req, res) => {
         description,
         contactPerson,
         contactNumber,
-        companyfield
+        companyfield,
+        companylogo: logo.url
     });
     await company.save();
-    const token = await jwt.sign({ id: company._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
     res.status(201).json({
         message: "Company registered successfully",
         company: {
@@ -127,9 +149,7 @@ const registerCompany = asynchandler(async (req, res) => {
             contactPerson: company.contactPerson,
             contactNumber: company.contactNumber,
             companyfield: company.companyfield
-        },
-        token
+        }
     }); 
-
 });
-
+export { registerStudent, registerAdmin, registerCompany };

@@ -30,6 +30,10 @@ const companySchema = new Schema({
         type: String,
         required: true
     },
+    companylogo:{
+        type: String,
+        required: true
+    },
     contactPerson: {
         type: String,
         required: true
