@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import cookieparser from "cookie-parser";
 import { ApiError } from "../utils/apierror.js";
+import { ApiResponse } from "../utils/apiresponse.js";
 import { uploadResult } from "../config/cloudinary.js";
 
 // Function to generate access and refresh tokens
@@ -75,19 +76,20 @@ const registerStudent = asynchandler(async (req, res) => {
     });
 
     await student.save();
-    res.status(201).json({
-        message: "Student registered successfully",
-        student: {
-            id: student._id,
-            fullname: student.fullname,
-            email: student.email,
-            branch: student.branch,
-            year: student.year,
-            gender: student.gender,
-            profilepic: student.profilepic.url,
-            rollno: student.rollno
-        }
-    }); 
+    return res.status(200).json(
+        new ApiResponse(200, {
+            student: {
+                id: student._id,
+                fullname: student.fullname,
+                email: student.email,
+                branch: student.branch,
+                year: student.year,
+                gender: student.gender,
+                profilepic: student.profilepic.url,
+                rollno: student.rollno
+            }
+        }, "Student registered successfully")
+    ); 
 });
 const registerAdmin = asynchandler(async (req, res) => {
     const {name,email,password,secretcode,profilepic} = req.body;
@@ -198,18 +200,19 @@ const Login = asynchandler(async (req, res) => {
             throw new ApiError(400, "Invalid user type");
         }
     
-        const user = await Student.findOne({ email });
+        const user = await UserModel.findOne({ email });
         console.log('User found:', user);
         if (!user) {
           throw new ApiError(405, "Invalid email or password");
         }
-        const x = "352345";
+        // Debugging bcrypt compare
+        console.log('Plain password:', password);
+        console.log('Hashed password from DB:', user.password);
         const isValidPassword = await bcrypt.compare(password, user.password);
-
-            // console.log(isValidPassword);
-        // if (!isValidPassword) {
-        //   throw new ApiError(401, "Invalid email or password");
-        // }
+        console.log('bcrypt.compare result:', isValidPassword);
+        if (!isValidPassword) {
+          throw new ApiError(401, "Invalid email or password");
+        }
         
     
         const { accesstoken, refreshtoken } = await generateAccessAndRefreshTokens(user._id, UserModel);
@@ -232,8 +235,5 @@ const Login = asynchandler(async (req, res) => {
             id: user._id,
             email: user.email,
           });
-    
-
    });
-   
 export { registerStudent, registerAdmin, registerCompany, Login };

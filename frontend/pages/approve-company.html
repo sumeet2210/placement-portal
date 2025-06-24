@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Companies - Admin Panel</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 32px 40px 40px 40px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 32px;
+            color: #2d3a4b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fafbfc;
+        }
+        th, td {
+            padding: 14px 10px;
+            text-align: left;
+        }
+        th {
+            background: #e9eef6;
+            color: #2d3a4b;
+            font-weight: 600;
+        }
+        tr {
+            border-bottom: 1px solid #e0e6ed;
+        }
+        tr:last-child {
+            border-bottom: none;
+        }
+        .action-btn {
+            padding: 7px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: background 0.2s;
+        }
+        .approve {
+            background: #4caf50;
+            color: #fff;
+        }
+        .approve:hover {
+            background: #388e3c;
+        }
+        .reject {
+            background: #f44336;
+            color: #fff;
+        }
+        .reject:hover {
+            background: #c62828;
+        }
+        .no-pending {
+            text-align: center;
+            color: #888;
+            padding: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pending Company Approvals</h1>
+        <table id="pending-companies-table">
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="pending-companies-body">
+                <!-- Dynamic rows will be inserted here by JS -->
+                <tr class="no-pending-row">
+                    <td colspan="4" class="no-pending">No pending companies for approval.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="../js/approve-company.js"></script>
+</body>
+</html>

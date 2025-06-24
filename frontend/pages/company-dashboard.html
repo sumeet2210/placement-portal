@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Company Dashboard - Placement Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    html, body { height: 100%; width: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(120deg, #f0f2f5 0%, #e0e7ff 100%); }
+    body { min-height: 100vh; min-width: 100vw; width: 100vw; height: 100vh; overflow-x: hidden; }
+    .dashboard-container { min-height: 100vh; min-width: 100vw; width: 100vw; height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; margin: 0; padding: 0; background: rgba(255,255,255,0.95); border-radius: 0; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+    .dashboard-header { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 24px 32px 16px 32px; background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%); color: #fff; box-sizing: border-box; box-shadow: 0 2px 8px rgba(99,102,241,0.08); }
+    .profile-section { display: flex; align-items: center; gap: 20px; }
+    .profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(99,102,241,0.15); }
+    .profile-section h2 { margin: 0 0 4px 0; font-size: 1.5rem; font-weight: 600; color: #fff; }
+    .profile-section p { margin: 0; color: #e0e7ff; font-size: 1rem; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .btn { padding: 8px 18px; border: none; border-radius: 6px; background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%); color: #fff; font-weight: 500; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(99,102,241,0.08); transition: background 0.2s, box-shadow 0.2s, transform 0.1s; }
+    .btn:hover { background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%); box-shadow: 0 4px 16px rgba(99,102,241,0.15); transform: translateY(-2px) scale(1.03); }
+    .logout-btn { background: linear-gradient(90deg, #ef4444 0%, #f87171 100%); }
+    .logout-btn:hover { background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%); }
+    .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100vw; padding: 32px 0 0 0; background: transparent; }
+    .section { width: 90%; max-width: 1000px; margin-top: 0; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(99,102,241,0.07); padding: 24px 32px; margin-bottom: 32px; }
+    .section-title { font-size: 1.3rem; margin-bottom: 18px; color: #60a5fa; font-weight: 600; letter-spacing: 0.5px; }
+    .company-actions { display: flex; gap: 16px; margin-bottom: 24px; }
+    .company-actions .btn { background: #60a5fa; color: #fff; border: none; border-radius: 6px; padding: 10px 20px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    .company-actions .btn:hover { background: #2563eb; }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .data-table th, .data-table td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; }
+    .data-table th { background: #f1f5f9; color: #60a5fa; }
+    .data-table tr:nth-child(even) { background: #f9fafb; }
+    .data-table tr:hover { background: #e0e7ff; }
+    .view-app-btn { background: #6366f1; color: #fff; border: none; border-radius: 5px; padding: 6px 14px; font-size: 0.95em; cursor: pointer; transition: background 0.2s; }
+    .view-app-btn:hover { background: #4338ca; }
+    @media (max-width: 700px) {
+      .dashboard-header { flex-direction: column; align-items: flex-start; padding: 16px 8px; }
+      .main-content, .section { width: 98%; }
+      .profile-section { flex-direction: column; align-items: flex-start; }
+      .header-actions { flex-direction: column; gap: 8px; }
+      .section { padding: 16px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <div class="profile-section">
+        <img src="../img/default-profile.png" alt="Profile Picture" class="profile-pic" id="companyProfilePic">
+        <div>
+          <h2 id="companyName">Company Name</h2>
+          <p id="companyEmail">company@email.com</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+    <main class="main-content">
+      <div class="section">
+        <div class="section-title">Quick Actions</div>
+        <div class="company-actions">
+          <button class="btn" onclick="window.location.href='post-job.html'">Create Job</button>
+          <button class="btn" onclick="showJobsSection()">View My Jobs</button>
+        </div>
+      </div>
+      <div class="section" id="jobsSection" style="display:none;">
+        <div class="section-title">My Posted Jobs</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Job Title</th>
+              <th>Location</th>
+              <th>Posted On</th>
+              <th>Applications</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="jobsTableBody">
+            <tr><td colspan="5" style="text-align:center; color:#888;">No jobs posted yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="section" id="applicationsSection" style="display:none;">
+        <div class="section-title">Applications for <span id="jobTitleSpan"></span></div>
+        <button class="btn" onclick="hideApplicationsSection()" style="margin-bottom:12px;">Back to Jobs</button>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Email</th>
+              <th>Resume</th>
+              <th>Applied On</th>
+            </tr>
+          </thead>
+          <tbody id="applicationsTableBody">
+            <tr><td colspan="4" style="text-align:center; color:#888;">No applications yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <script>
+    // Set company info from localStorage/session (replace with real data fetching)
+    document.getElementById('companyName').textContent = localStorage.getItem('companyName') || 'Company Name';
+    document.getElementById('companyEmail').textContent = localStorage.getItem('companyEmail') || 'company@email.com';
+    document.getElementById('logoutBtn').onclick = function() {
+      localStorage.clear();
+      window.location.href = '../index.html';
+    };
+
+    // Show/Hide jobs and applications sections
+    function showJobsSection() {
+      document.getElementById('jobsSection').style.display = '';
+      document.getElementById('applicationsSection').style.display = 'none';
+    }
+    function showApplicationsSection(jobId, jobTitle) {
+      document.getElementById('jobsSection').style.display = 'none';
+      document.getElementById('applicationsSection').style.display = '';
+      document.getElementById('jobTitleSpan').textContent = jobTitle;
+      // TODO: Fetch and display applications for the selected jobId
+    }
+    function hideApplicationsSection() {
+      document.getElementById('applicationsSection').style.display = 'none';
+      document.getElementById('jobsSection').style.display = '';
+    }
+    // TODO: Fetch jobs for this company and populate jobsTableBody
+    // Each job row should have a 'View Applications' button that calls showApplicationsSection(jobId, jobTitle)
+  </script>
+</body>
+</html>

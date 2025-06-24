@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Placement Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    html, body { height: 100%; width: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(120deg, #e0e7ff 0%, #f0f2f5 100%); }
+    body { min-height: 100vh; min-width: 100vw; width: 100vw; height: 100vh; overflow-x: hidden; }
+    .dashboard-container { min-height: 100vh; min-width: 100vw; width: 100vw; height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; margin: 0; padding: 0; background: rgba(255,255,255,0.95); border-radius: 0; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+    .dashboard-header { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 24px 32px 16px 32px; background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%); color: #fff; box-sizing: border-box; box-shadow: 0 2px 8px rgba(99,102,241,0.08); }
+    .profile-section { display: flex; align-items: center; gap: 20px; }
+    .profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(99,102,241,0.15); }
+    .profile-section h2 { margin: 0 0 4px 0; font-size: 1.5rem; font-weight: 600; color: #fff; }
+    .profile-section p { margin: 0; color: #e0e7ff; font-size: 1rem; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .btn { padding: 8px 18px; border: none; border-radius: 6px; background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%); color: #fff; font-weight: 500; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(99,102,241,0.08); transition: background 0.2s, box-shadow 0.2s, transform 0.1s; }
+    .btn:hover { background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%); box-shadow: 0 4px 16px rgba(99,102,241,0.15); transform: translateY(-2px) scale(1.03); }
+    .logout-btn { background: linear-gradient(90deg, #ef4444 0%, #f87171 100%); }
+    .logout-btn:hover { background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%); }
+    .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100vw; padding: 32px 0 0 0; background: transparent; }
+    .section { width: 90%; max-width: 1000px; margin-top: 0; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(99,102,241,0.07); padding: 24px 32px; margin-bottom: 32px; }
+    .section-title { font-size: 1.3rem; margin-bottom: 18px; color: #6366f1; font-weight: 600; letter-spacing: 0.5px; }
+    .admin-actions { display: flex; gap: 16px; margin-bottom: 24px; }
+    .admin-actions .btn { background: #6366f1; color: #fff; border: none; border-radius: 6px; padding: 10px 20px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    .admin-actions .btn:hover { background: #4338ca; }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .data-table th, .data-table td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; }
+    .data-table th { background: #f1f5f9; color: #6366f1; }
+    .data-table tr:nth-child(even) { background: #f9fafb; }
+    .data-table tr:hover { background: #e0e7ff; }
+    @media (max-width: 700px) {
+      .dashboard-header { flex-direction: column; align-items: flex-start; padding: 16px 8px; }
+      .main-content, .section { width: 98%; }
+      .profile-section { flex-direction: column; align-items: flex-start; }
+      .header-actions { flex-direction: column; gap: 8px; }
+      .section { padding: 16px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <div class="profile-section">
+        <img src="../img/default-profile.png" alt="Profile Picture" class="profile-pic" id="adminProfilePic">
+        <div>
+          <h2 id="adminName">Admin Name</h2>
+          <p id="adminEmail">admin@email.com</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+    <main class="main-content">
+      <div class="section">
+        <div class="section-title">Quick Actions</div>
+        <div class="admin-actions">
+          <button class="btn" onclick="window.location.href='approve-company.html'">Approve Companies</button>
+          <button class="btn" onclick="alert('Show all jobs')">View All Jobs</button>
+          <button class="btn" onclick="alert('Show all students')">View All Students</button>
+          <button class="btn" onclick="alert('Show all applications')">View Applications</button>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">Recent Activity</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="activityTableBody">
+            <tr><td>Company</td><td>ABC Pvt Ltd requested approval</td><td>2025-06-24</td></tr>
+            <tr><td>Job</td><td>New job posted: Software Engineer</td><td>2025-06-23</td></tr>
+            <tr><td>Student</td><td>John Doe registered</td><td>2025-06-22</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <script>
+    // Example: Set admin info from localStorage/session (replace with real data fetching)
+    document.getElementById('adminName').textContent = localStorage.getItem('adminName') || 'Admin Name';
+    document.getElementById('adminEmail').textContent = localStorage.getItem('adminEmail') || 'admin@email.com';
+    document.getElementById('logoutBtn').onclick = function() {
+      // Clear session/localStorage and redirect
+      localStorage.clear();
+      window.location.href = '../index.html';
+    };
+  </script>
+</body>
+</html>

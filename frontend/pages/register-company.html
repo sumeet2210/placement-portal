@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Registration - Placement Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="register-container">
+        <h2>Company Registration</h2>
+        <form id="companyRegisterForm">
+            <label for="company-name">Company Name</label>
+            <input type="text" id="company-name" name="company-name" required>
+
+            <label for="company-email">Company Email</label>
+            <input type="email" id="company-email" name="company-email" required>
+
+            <label for="company-password">Password</label>
+            <input type="password" id="company-password" name="company-password" required>
+
+            <label for="company-address">Address</label>
+            <input type="text" id="company-address" name="company-address" required>
+
+            <label for="company-website">Website</label>
+            <input type="url" id="company-website" name="company-website" required>
+
+            <label for="company-description">Description</label>
+            <textarea id="company-description" name="company-description" required></textarea>
+
+            <label for="company-contact-person">Contact Person</label>
+            <input type="text" id="company-contact-person" name="company-contact-person" required>
+
+            <label for="company-contact-number">Contact Number</label>
+            <input type="text" id="company-contact-number" name="company-contact-number" required>
+
+            <label for="company-core">COMPANY FIELD</label>
+            <select id="company-core" name="company-core" required>
+                <option value="" disabled selected>Select Branch</option>
+                <option value="chemical">Chemical</option>
+                <option value="cse">Computer Science and Engineering (CSE)</option>
+                <option value="mech">Mechanical</option>
+                <option value="civil">Civil</option>
+                <option value="metallurgy">Metallurgy</option>
+                <option value="ece">Electronics and Communication Engineering (ECE)</option>
+                <option value="eee">Electrical and Electronics Engineering (EEE)</option>
+                <option value="mathematics">Mathematics and Computing</option>
+                <option value="aids">Artificial Intelligence and Data Science (AIDS)</option>
+                <option value="none">Others</option>
+            </select>
+            <button type="submit" class="btn">Register</button>
+        </form>
+    </div>
+    <script src="../js/register-company.js"></script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0e7ff 0%, #f0f2f5 100%);
+        }
+        body {
+            min-height: 100vh;
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        .dashboard-container {
+            min-height: 100vh;
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            margin: 0;
+            padding: 0;
+            background: rgba(255,255,255,0.95);
+            border-radius: 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        }
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 24px 32px 16px 32px;
+            background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+            color: #fff;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+        }
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.15);
+        }
+        .profile-section h2 {
+            margin: 0 0 4px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .profile-section p {
+            margin: 0;
+            color: #e0e7ff;
+            font-size: 1rem;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+            color: #fff;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+            box-shadow: 0 4px 16px rgba(99,102,241,0.15);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .logout-btn {
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+        }
+        .logout-btn:hover {
+            background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%);
+        }
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 4px;
+            margin: 3px 0;
+            background: #fff;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -220px;
+            width: 200px;
+            height: 100vh;
+            background: linear-gradient(180deg, #6366f1 0%, #60a5fa 100%);
+            color: #fff;
+            z-index: 1000;
+            transition: right 0.3s;
+            padding-top: 80px;
+            box-shadow: -2px 0 12px rgba(99,102,241,0.10);
+        }
+        .side-menu.open {
+            right: 0;
+        }
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .side-menu li {
+            margin: 24px 0;
+            text-align: center;
+        }
+        .side-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+        .side-menu a:hover {
+            color: #fbbf24;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100vw;
+            padding: 32px 0 0 0;
+            background: transparent;
+        }
+        .section {
+            width: 90%;
+            max-width: 1000px;
+            margin-top: 0;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(99,102,241,0.07);
+            padding: 24px 32px;
+            margin-bottom: 32px;
+        }
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            color: #6366f1;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .applied-list {
+            list-style: none;
+            padding: 0;
+        }
+        .applied-item {
+            background: linear-gradient(90deg, #f1f5f9 0%, #e0e7ff 100%);
+            margin-bottom: 14px;
+            padding: 18px 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 4px rgba(99,102,241,0.06);
+            font-size: 1.05rem;
+        }
+        .applied-item .status {
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            background: #e0e7ff;
+            color: #6366f1;
+            margin-left: 16px;
+        }
+        @media (max-width: 700px) {
+            .dashboard-header { flex-direction: column; align-items: flex-start; padding: 16px 8px; }
+            .main-content, .section { width: 98%; }
+            .profile-section { flex-direction: column; align-items: flex-start; }
+            .header-actions { flex-direction: column; gap: 8px; }
+            .section { padding: 16px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="profile-section">
+                <img src="../img/default-profile.png" alt="Profile Picture" class="profile-pic" id="studentProfilePic">
+                <div>
+                    <h2 id="studentName">Student Name</h2>
+                    <p id="studentEmail">student@email.com</p>
+                    <p id="studentBranch">Branch: </p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn" id="uploadResumeBtn">Upload/Update Resume</button>
+                <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" style="display:none;">
+                <span id="resumeStatus" style="margin-left:0; margin-top:4px; display:block; color:#6366f1; font-weight:500; font-size:0.98rem;"></span>
+                <button class="btn logout-btn" id="logoutBtn">Logout</button>
+                <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </header>
+        <nav class="side-menu" id="sideMenu">
+            <ul>
+                <li><a href="#" id="navHome">Home</a></li>
+                <li><a href="#" id="navAvailableJobs">Available Jobs</a></li>
+                <li><a href="#" id="navNotifications">Notifications</a></li>
+                <li><a href="#" id="navEditProfile">Edit Profile</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div class="section">
+                <div class="section-title">Applied Jobs</div>
+                <ul class="applied-list" id="appliedJobsList">
+                    <!-- Applied jobs will be populated here -->
+                </ul>
+            </div>
+        </main>
+    </div>
+    <script src="../js/student.js"></script>
+    <script>
+        // Hamburger menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sideMenu = document.getElementById('sideMenu');
+            hamburgerBtn.addEventListener('click', function() {
+                sideMenu.classList.toggle('open');
+            });
+            // Optional: close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!sideMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                    sideMenu.classList.remove('open');
+                }
+            });
+            // Upload Resume button triggers file input
+            const uploadResumeBtn = document.getElementById('uploadResumeBtn');
+            const resumeUpload = document.getElementById('resumeUpload');
+            const resumeStatus = document.getElementById('resumeStatus');
+            uploadResumeBtn.addEventListener('click', function() {
+                resumeUpload.value = '';
+                resumeUpload.click();
+            });
+            resumeUpload.addEventListener('change', function() {
+                if (resumeUpload.files && resumeUpload.files.length > 0) {
+                    const file = resumeUpload.files[0];
+                    resumeStatus.textContent = `Selected file: ${file.name}`;
+                } else {
+                    resumeStatus.textContent = '';
+                }
+            });
+            document.getElementById('navAvailableJobs').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'available-jobs.html';
+            });
+        });
+    </script>
+</body>
+</html>

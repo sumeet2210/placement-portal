@@ -1,0 +1,35 @@
+import Company from "../models/company.models";
+import asynchandler from "express-async-handler";
+import bcrypt from "bcryptjs";
+import { ApiError } from "../utils/apierror.js";
+import { ApiResponse } from "../utils/apiresponse.js";
+const postjob = asynchandler(async (req, res) => {
+    const { title, description, requirements, salary, location, companyId } = req.body;
+
+    if (!title || !description || !requirements || !salary || !location || !companyId) {
+        throw new ApiError(400, "All fields are required");
+    }
+
+    const company = await Company.findById(companyId);
+    if (!company) {
+        throw new ApiError(404, "Company not found");
+    }
+
+    const job = await company.jobs.create({
+        title,
+        description,
+        requirements,
+        salary,
+        location
+    });
+
+    company.jobs.push(job._id);
+    await company.save();
+
+    return res.status(201).json(new ApiResponse(true, job, "Job posted successfully"));
+});
+const getalljobs = asynchandler(async (req, res) => {
+    const jobs = await Job.find().populate('company', 'name');
+    return res.status(200).json(new ApiResponse(true, jobs, "Jobs fetched successfully"));
+});
+export { postjob, getalljobs };

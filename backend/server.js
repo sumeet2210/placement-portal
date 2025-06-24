@@ -6,7 +6,7 @@ dotenv.config({
 })
 connect()
 .then(()=>{
-    app.listen(process.env.PORT || 6000, ()=>{
+    app.listen(process.env.PORT || 3001, ()=>{
         console.log(`server is running at : ${process.env.PORT}`)
     })
     

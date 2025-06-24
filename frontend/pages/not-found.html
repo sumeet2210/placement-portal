@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(120deg, #e0e7ff 0%, #f0f2f5 100%);
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+        }
+        .not-found-container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(99,102,241,0.10);
+            padding: 48px 32px;
+            text-align: center;
+            max-width: 400px;
+        }
+        .not-found-title {
+            font-size: 3rem;
+            color: #6366f1;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .not-found-message {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 24px;
+        }
+        .not-found-home {
+            display: inline-block;
+            padding: 10px 28px;
+            background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+        }
+        .not-found-home:hover {
+            background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+        }
+        @media (max-width: 500px) {
+            .not-found-container { padding: 32px 8px; }
+            .not-found-title { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="not-found-container">
+        <div class="not-found-title">404</div>
+        <div class="not-found-message">Oops! The page you are looking for does not exist.</div>
+        <a href="../index.html" class="not-found-home">Go to Home</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Post a Job - Placement Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(120deg, #e0e7ff 0%, #f0f2f5 100%);
+    }
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: hidden;
+      display: block;
+      align-items: unset;
+      justify-content: unset;
+    }
+    .container {
+      max-width: 520px;
+      width: 100%;
+      min-width: 0;
+      margin: 48px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(99,102,241,0.13);
+      padding: 40px 20px 32px 20px;
+      position: relative;
+      animation: fadeIn 0.7s cubic-bezier(.4,0,.2,1);
+      box-sizing: border-box;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: none; }
+    }
+    h1 {
+      text-align: center;
+      color: #6366f1;
+      margin-bottom: 28px;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+      display: block;
+      letter-spacing: 0.2px;
+    }
+    input, textarea, select {
+      padding: 12px 14px;
+      border: 1.5px solid #c7d2fe;
+      border-radius: 7px;
+      font-size: 1.05rem;
+      background: #f9fafb;
+      transition: border 0.2s, box-shadow 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    input:focus, textarea:focus, select:focus {
+      border: 1.5px solid #6366f1;
+      outline: none;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    }
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .btn {
+      background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 14px 0;
+      font-size: 1.13rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+      letter-spacing: 0.2px;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+      box-shadow: 0 4px 16px rgba(99,102,241,0.15);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .msg {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 1.08rem;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+    }
+    .msg.success { color: #22c55e; }
+    .msg.error { color: #ef4444; }
+    @media (max-width: 600px) {
+      .container {
+        padding: 18px 2vw 18px 2vw;
+        margin: 24px 0;
+        max-width: 100vw;
+      }
+      h1 { font-size: 1.3rem; }
+      .btn { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Post a New Job</h1>
+    <form id="postJobForm">
+      <div>
+        <label for="jobTitle">Job Title</label>
+        <input type="text" id="jobTitle" name="jobTitle" required>
+      </div>
+      <div>
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" required>
+      </div>
+      <div>
+        <label for="salary">Salary (per annum)</label>
+        <input type="number" id="salary" name="salary" min="0" required>
+      </div>
+      <div>
+        <label for="description">Job Description</label>
+        <textarea id="description" name="description" required></textarea>
+      </div>
+      <div>
+        <label for="deadline">Application Deadline</label>
+        <input type="date" id="deadline" name="deadline" required>
+      </div>
+      <div>
+        <label for="requirements">Requirements <span style="font-weight:400;font-size:0.95em;">(separate by semicolon or new line)</span></label>
+        <textarea id="requirements" name="requirements" required></textarea>
+      </div>
+      <input type="hidden" id="company" name="company" value="" />
+      <button type="submit" class="btn">Post Job</button>
+      <div id="formMsg" class="msg"></div>
+    </form>
+  </div>
+  <script>
+    document.getElementById('postJobForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      // Get requirements as array
+      let reqs = formData.get('requirements').split(/;|\n/).map(s => s.trim()).filter(Boolean);
+      // Set company from localStorage if available
+      let company = formData.get('company') || localStorage.getItem('companyName') || '';
+      const data = {
+        title: formData.get('jobTitle'),
+        location: formData.get('location'),
+        salary: formData.get('salary'),
+        description: formData.get('description'),
+        requirements: reqs,
+        deadline: formData.get('deadline'),
+        company: company
+      };
+      const msgDiv = document.getElementById('formMsg');
+      msgDiv.textContent = '';
+      msgDiv.className = 'msg';
+      try {
+        const res = await fetch('http://localhost:5000/api/job/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // You may need to add credentials or auth headers here
+          },
+          body: JSON.stringify(data),
+          credentials: 'include',
+        });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          msgDiv.textContent = 'Job posted successfully!';
+          msgDiv.classList.add('success');
+          form.reset();
+        } else {
+          msgDiv.textContent = result.message || 'Failed to post job.';
+          msgDiv.classList.add('error');
+        }
+      } catch (err) {
+        msgDiv.textContent = 'Error posting job. Please try again.';
+        msgDiv.classList.add('error');
+      }
+    };
+  </script>
+</body>
+</html>
