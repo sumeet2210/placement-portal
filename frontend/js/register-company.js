@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
       try {
         const response = await fetch('http://localhost:3001/api/v1/company/register', {
           method: 'POST',
+          // headers: { 'Content-Type': 'application/json' },
           body: formData
         });
         let data = {};
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
           data = await response.json();
         } catch (jsonErr) {
           console.error('Error parsing JSON:', jsonErr);
-          const text = await response.text();
+          // const text = await response.text();
           console.error('Raw response text:', text);
         }
         if (response.ok) {

@@ -1,6 +1,7 @@
 import Company from "../models/company.models";
 import asynchandler from "express-async-handler";
 import bcrypt from "bcryptjs";
+import {Job} from "../models/job.models.js";
 import { ApiError } from "../utils/apierror.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 const postjob = asynchandler(async (req, res) => {
@@ -15,12 +16,13 @@ const postjob = asynchandler(async (req, res) => {
         throw new ApiError(404, "Company not found");
     }
 
-    const job = await company.jobs.create({
+    const job = await Job.create({
         title,
         description,
         requirements,
         salary,
-        location
+        location,
+        company: companyId
     });
 
     company.jobs.push(job._id);

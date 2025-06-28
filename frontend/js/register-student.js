@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
       try {
         const response = await fetch('http://localhost:3001/api/v1/student/register', {
           method: 'POST',
-          body: formData
+          body: formData // Do NOT set headers here!
         });
         console.log('Fetch request sent');
         console.log('Raw response:', response);
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.error('Raw response text:', text);
         }
         console.log('Parsed data:', data);
-        if (response) {
+        if (response.ok) {
           alert('Registration successful! Please login.');
           window.location.href = '/frontend/pages/login.html';
         } else {

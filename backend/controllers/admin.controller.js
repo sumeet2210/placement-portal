@@ -1,4 +1,5 @@
-import asynchandler from "../utils/asynchandler";
+import asynchandler from "../utils/asynchandler.js";
+import Admin from "../models/admin.models.js";
 
 const getPendingCompanies = asynchandler(async (req, res) => {
     const pendingCompanies = await req.db.Company.find({ status: "pending" });
@@ -120,11 +121,33 @@ const rejectJob = asynchandler(async (req, res) => {
         message: "Job rejected successfully"
     });
 });
+// Get profile for the logged-in admin
+export const getAdminProfile = async (req, res) => {
+    try {
+        const adminEmail = req.user.email;
+        const admin = await Admin.findOne({ email: adminEmail }).select("-password -refreshtoken");
+        if (!admin) {
+            return res.status(404).json({ success: false, message: "Admin not found" });
+        }
+        res.json({ success: true, admin });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Failed to fetch admin profile", error: error.message });
+    }
+};
+const getAllApplications = asynchandler(async (req, res) => {
+    try {
+        const applications = await req.db.Application.find();
+        res.status(200).json({ success: true, data: applications });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Failed to fetch applications", error: error.message });
+    }
+});
 export {
     getPendingCompanies,
     approveCompany,
     rejectCompany,
     getPendingJobs,
     approveJob,
-    rejectJob
+    rejectJob,
+    getAllApplications
 };
