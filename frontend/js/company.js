@@ -28,3 +28,33 @@ if (logoutBtn) {
         window.location.href = 'login.html';
     });
 }
+
+// Fetch and display company profile data
+async function loadCompanyProfile() {
+    try {
+        const res = await fetch('http://localhost:3001/api/v1/company/profile', {
+            credentials: 'include',
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'Failed to fetch company profile');
+        const company = data.company;
+        if (document.getElementById('companyName'))
+            document.getElementById('companyName').textContent = company.name || '';
+        if (document.getElementById('companyEmail'))
+            document.getElementById('companyEmail').textContent = company.email || '';
+        if (company.companylogo && document.getElementById('companyLogo')) {
+            document.getElementById('companyLogo').src = company.companylogo;
+        }
+        // Add more fields as needed
+    } catch (err) {
+        if (document.getElementById('companyName'))
+            document.getElementById('companyName').textContent = 'Error loading profile';
+        if (document.getElementById('companyEmail'))
+            document.getElementById('companyEmail').textContent = err.message;
+        console.error('Company profile load error:', err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadCompanyProfile();
+});

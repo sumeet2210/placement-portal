@@ -1,7 +1,7 @@
 import Company from "../models/company.models";
 import asynchandler from "express-async-handler";
 import bcrypt from "bcryptjs";
-import {Job} from "../models/job.models.js";
+import Job from "../models/job.models.js";
 import { ApiError } from "../utils/apierror.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 const postjob = asynchandler(async (req, res) => {
@@ -30,8 +30,8 @@ const postjob = asynchandler(async (req, res) => {
 
     return res.status(201).json(new ApiResponse(true, job, "Job posted successfully"));
 });
-const getalljobs = asynchandler(async (req, res) => {
+const getAllJobs = asynchandler(async (req, res) => {
     const jobs = await Job.find().populate('company', 'name');
-    return res.status(200).json(new ApiResponse(true, jobs, "Jobs fetched successfully"));
+    return res.status(200).json({ success: true, jobs });
 });
-export { postjob, getalljobs };
+export { postjob, getAllJobs };

@@ -4,8 +4,7 @@ async function loadAppliedJobs() {
     appliedJobsList.innerHTML = '<li>Loading...</li>';
     try {
         const res = await fetch('http://localhost:3001/api/v1/student/applications', {
-            credentials: 'include',
-            credentials: 'true', // Ensure cookies are sent with the request
+            credentials: 'include', // Ensure cookies are sent with the request
         });
         const data = await res.json();
         if (!data.success) throw new Error(data.message || 'Failed to fetch applications');

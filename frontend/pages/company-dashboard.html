@@ -99,32 +99,6 @@
       </div>
     </main>
   </div>
-  <script>
-    // Set company info from localStorage/session (replace with real data fetching)
-    document.getElementById('companyName').textContent = localStorage.getItem('companyName') || 'Company Name';
-    document.getElementById('companyEmail').textContent = localStorage.getItem('companyEmail') || 'company@email.com';
-    document.getElementById('logoutBtn').onclick = function() {
-      localStorage.clear();
-      window.location.href = '../index.html';
-    };
-
-    // Show/Hide jobs and applications sections
-    function showJobsSection() {
-      document.getElementById('jobsSection').style.display = '';
-      document.getElementById('applicationsSection').style.display = 'none';
-    }
-    function showApplicationsSection(jobId, jobTitle) {
-      document.getElementById('jobsSection').style.display = 'none';
-      document.getElementById('applicationsSection').style.display = '';
-      document.getElementById('jobTitleSpan').textContent = jobTitle;
-      // TODO: Fetch and display applications for the selected jobId
-    }
-    function hideApplicationsSection() {
-      document.getElementById('applicationsSection').style.display = 'none';
-      document.getElementById('jobsSection').style.display = '';
-    }
-    // TODO: Fetch jobs for this company and populate jobsTableBody
-    // Each job row should have a 'View Applications' button that calls showApplicationsSection(jobId, jobTitle)
-  </script>
+  <script src="../js/company.js"></script>
 </body>
 </html>

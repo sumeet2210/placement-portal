@@ -82,15 +82,6 @@
       </div>
     </main>
   </div>
-  <script>
-    // Example: Set admin info from localStorage/session (replace with real data fetching)
-    document.getElementById('adminName').textContent = localStorage.getItem('adminName') || 'Admin Name';
-    document.getElementById('adminEmail').textContent = localStorage.getItem('adminEmail') || 'admin@email.com';
-    document.getElementById('logoutBtn').onclick = function() {
-      // Clear session/localStorage and redirect
-      localStorage.clear();
-      window.location.href = '../index.html';
-    };
-  </script>
+  <script src="../js/admin.js"></script>
 </body>
 </html>

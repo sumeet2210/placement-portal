@@ -15,10 +15,10 @@ export const verifyJWT = asynchandler(async (req, res, next) => {
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     let user = await Student.findById(decodedToken?.id).select("-password -refreshtoken");
     if (!user) {
-      user = await Company.findById(decodedToken?._id).select("-password -refreshtoken");
+      user = await Company.findById(decodedToken?.id).select("-password -refreshtoken");
     }
     if (!user) {
-      user = await Admin.findById(decodedToken?._id).select("-password -refreshtoken");
+      user = await Admin.findById(decodedToken?.id).select("-password -refreshtoken");
     }
     if (!user) {
       throw new ApiError(401, "Invalid Access Token");

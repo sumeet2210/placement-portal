@@ -174,11 +174,10 @@
       msgDiv.textContent = '';
       msgDiv.className = 'msg';
       try {
-        const res = await fetch('http://localhost:5000/api/job/create', {
+        const res = await fetch('http://localhost:3001/api/v1/company/job', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            // You may need to add credentials or auth headers here
           },
           body: JSON.stringify(data),
           credentials: 'include',
