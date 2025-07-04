@@ -6,38 +6,368 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/style.css">
   <style>
-    html, body { height: 100%; width: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(120deg, #f0f2f5 0%, #e0e7ff 100%); }
-    body { min-height: 100vh; min-width: 100vw; width: 100vw; height: 100vh; overflow-x: hidden; }
-    .dashboard-container { min-height: 100vh; min-width: 100vw; width: 100vw; height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; margin: 0; padding: 0; background: rgba(255,255,255,0.95); border-radius: 0; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
-    .dashboard-header { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 24px 32px 16px 32px; background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%); color: #fff; box-sizing: border-box; box-shadow: 0 2px 8px rgba(99,102,241,0.08); }
-    .profile-section { display: flex; align-items: center; gap: 20px; }
-    .profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(99,102,241,0.15); }
-    .profile-section h2 { margin: 0 0 4px 0; font-size: 1.5rem; font-weight: 600; color: #fff; }
-    .profile-section p { margin: 0; color: #e0e7ff; font-size: 1rem; }
-    .header-actions { display: flex; align-items: center; gap: 12px; }
-    .btn { padding: 8px 18px; border: none; border-radius: 6px; background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%); color: #fff; font-weight: 500; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(99,102,241,0.08); transition: background 0.2s, box-shadow 0.2s, transform 0.1s; }
-    .btn:hover { background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%); box-shadow: 0 4px 16px rgba(99,102,241,0.15); transform: translateY(-2px) scale(1.03); }
-    .logout-btn { background: linear-gradient(90deg, #ef4444 0%, #f87171 100%); }
-    .logout-btn:hover { background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%); }
-    .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100vw; padding: 32px 0 0 0; background: transparent; }
-    .section { width: 90%; max-width: 1000px; margin-top: 0; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(99,102,241,0.07); padding: 24px 32px; margin-bottom: 32px; }
-    .section-title { font-size: 1.3rem; margin-bottom: 18px; color: #60a5fa; font-weight: 600; letter-spacing: 0.5px; }
-    .company-actions { display: flex; gap: 16px; margin-bottom: 24px; }
-    .company-actions .btn { background: #60a5fa; color: #fff; border: none; border-radius: 6px; padding: 10px 20px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
-    .company-actions .btn:hover { background: #2563eb; }
-    .data-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    .data-table th, .data-table td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; }
-    .data-table th { background: #f1f5f9; color: #60a5fa; }
-    .data-table tr:nth-child(even) { background: #f9fafb; }
-    .data-table tr:hover { background: #e0e7ff; }
-    .view-app-btn { background: #6366f1; color: #fff; border: none; border-radius: 5px; padding: 6px 14px; font-size: 0.95em; cursor: pointer; transition: background 0.2s; }
-    .view-app-btn:hover { background: #4338ca; }
-    @media (max-width: 700px) {
-      .dashboard-header { flex-direction: column; align-items: flex-start; padding: 16px 8px; }
-      .main-content, .section { width: 98%; }
-      .profile-section { flex-direction: column; align-items: flex-start; }
-      .header-actions { flex-direction: column; gap: 8px; }
-      .section { padding: 16px 8px; }
+    /* Override global styles for dashboard */
+    html, body {
+      font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      height: 100% !important;
+      width: 100% !important;
+      overflow-x: hidden !important;
+      display: block !important;
+      align-items: unset !important;
+      justify-content: unset !important;
+    }
+
+    .dashboard-container {
+      min-height: 100vh;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    /* Header Styles */
+    .dashboard-header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+
+    .profile-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: white;
+    }
+
+    .profile-pic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-info h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-info p {
+      margin: 2px 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.7);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.9);
+    }
+
+    /* Hamburger Menu */
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      margin: 3px 0;
+      background: white;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    /* Side Menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 280px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1000;
+      transition: right 0.3s ease;
+      padding-top: 100px;
+      box-shadow: -10px 0 50px rgba(31, 38, 135, 0.37);
+    }
+
+    .side-menu.open {
+      right: 0;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .side-menu li {
+      margin: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .side-menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      display: block;
+      padding: 20px 30px;
+      transition: all 0.3s ease;
+    }
+
+    .side-menu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      padding-left: 40px;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      min-height: calc(100vh - 120px);
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: white;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 15px;
+    }
+
+    .company-actions {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .company-actions .btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .company-actions .btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .data-table th {
+      background: rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .data-table td {
+      font-size: 0.95rem;
+    }
+
+    .view-app-btn {
+      background: rgba(99, 102, 241, 0.8);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .view-app-btn:hover {
+      background: rgba(99, 102, 241, 1);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .header-actions > .btn:not(.logout-btn) {
+        display: none;
+      }
+
+      .dashboard-header {
+        padding: 15px 20px;
+      }
+
+      .profile-section {
+        gap: 15px;
+      }
+
+      .profile-pic {
+        width: 50px;
+        height: 50px;
+      }
+
+      .profile-info h2 {
+        font-size: 1.2rem;
+      }
+
+      .main-content {
+        padding: 20px 15px;
+      }
+
+      .section {
+        padding: 20px;
+        border-radius: 15px;
+      }
+
+      .section-title {
+        font-size: 1.4rem;
+      }
+
+      .company-actions {
+        flex-direction: column;
+      }
+
+      .data-table {
+        font-size: 0.85rem;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 10px 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-header {
+        padding: 10px 15px;
+      }
+
+      .main-content {
+        padding: 15px 10px;
+      }
+
+      .section {
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+
+      .side-menu {
+        width: 100vw;
+        right: -100vw;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -46,25 +376,39 @@
     <header class="dashboard-header">
       <div class="profile-section">
         <img src="../img/default-profile.png" alt="Profile Picture" class="profile-pic" id="companyProfilePic">
-        <div>
+        <div class="profile-info">
           <h2 id="companyName">Company Name</h2>
           <p id="companyEmail">company@email.com</p>
         </div>
       </div>
       <div class="header-actions">
         <button class="btn logout-btn" id="logoutBtn">Logout</button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </header>
+
+    <nav class="side-menu" id="sideMenu">
+      <ul>
+        <li><a href="#" id="navHome">🏠 Dashboard</a></li>
+        <li><a href="#" onclick="window.location.href='post-job.html'">💼 Create Job</a></li>
+        <li><a href="#" id="navMyJobs">📋 My Jobs</a></li>
+        <li><a href="#" id="navApplications">👥 Applications</a></li>
+        <li><a href="#" id="navEditProfile">🏢 Edit Profile</a></li>
+      </ul>
+    </nav>
+
     <main class="main-content">
       <div class="section">
-        <div class="section-title">Quick Actions</div>
+        <div class="section-title">🚀 Quick Actions</div>
         <div class="company-actions">
           <button class="btn" onclick="window.location.href='post-job.html'">Create Job</button>
           <button class="btn" onclick="window.location.href='my-jobs.html'">View My Jobs</button>
         </div>
       </div>
       <div class="section" id="jobsSection" style="display:none;">
-        <div class="section-title">My Posted Jobs</div>
+        <div class="section-title">📊 My Posted Jobs</div>
         <table class="data-table">
           <thead>
             <tr>
@@ -76,12 +420,12 @@
             </tr>
           </thead>
           <tbody id="jobsTableBody">
-            <tr><td colspan="5" style="text-align:center; color:#888;">No jobs posted yet.</td></tr>
+            <tr><td colspan="5" style="text-align:center; color:rgba(255,255,255,0.7);">No jobs posted yet.</td></tr>
           </tbody>
         </table>
       </div>
       <div class="section" id="applicationsSection" style="display:none;">
-        <div class="section-title">Applications for <span id="jobTitleSpan"></span></div>
+        <div class="section-title">👥 Applications for <span id="jobTitleSpan"></span></div>
         <button class="btn" onclick="hideApplicationsSection()" style="margin-bottom:12px;">Back to Jobs</button>
         <table class="data-table">
           <thead>
@@ -93,12 +437,30 @@
             </tr>
           </thead>
           <tbody id="applicationsTableBody">
-            <tr><td colspan="4" style="text-align:center; color:#888;">No applications yet.</td></tr>
+            <tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.7);">No applications yet.</td></tr>
           </tbody>
         </table>
       </div>
     </main>
   </div>
   <script src="../js/company.js"></script>
+  <script>
+    // Hamburger menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const sideMenu = document.getElementById('sideMenu');
+      
+      hamburgerBtn.addEventListener('click', function() {
+        sideMenu.classList.toggle('open');
+      });
+      
+      // Optional: close menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!sideMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+          sideMenu.classList.remove('open');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
