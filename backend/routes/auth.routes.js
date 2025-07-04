@@ -1,5 +1,5 @@
 import express from "express";
-import { registerStudent, registerAdmin, registerCompany,Login } from "../controllers/auth.controller.js";
+import { registerStudent, registerAdmin, registerCompany, Login, resetUserPassword } from "../controllers/auth.controller.js";
 import { upload } from "../config/multer.js";
 
 const router = express.Router();
@@ -17,6 +17,11 @@ router.route("/company/register").post(
     upload.fields([{ name: 'companylogo', maxCount: 1 }]),
     registerCompany
 );
-// secure routes can be added here in the future
+
+// Login route
 router.route("/login").post(upload.none(), Login);
+
+// Temporary password reset route (remove in production)
+router.route("/reset-password").post(resetUserPassword);
+
 export default router;

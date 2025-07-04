@@ -21,4 +21,8 @@ import adminRoutes from "./routes/admin.routes.js";
 app.use("/api/v1/admin", adminRoutes);
 import companyRoutes from "./routes/company.routes.js";
 app.use("/api/v1/company", companyRoutes);
+import jobRoutes from "./routes/job.routes.js";
+app.use("/api", jobRoutes);
+import applicationRoutes from "./routes/application.routes.js";
+app.use("/api/v1/application", applicationRoutes);
 export { app };

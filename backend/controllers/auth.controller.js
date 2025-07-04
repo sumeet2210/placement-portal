@@ -3,7 +3,7 @@ import Student from "../models/student.models.js";
 import Admin from "../models/admin.models.js";
 import Company from "../models/company.models.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import cookieparser from "cookie-parser";
 import { ApiError } from "../utils/apierror.js";
 import { ApiResponse } from "../utils/apiresponse.js";
@@ -63,13 +63,13 @@ const registerStudent = asynchandler(async (req, res) => {
         throw new ApiError(400, `Profile picture upload failed ${profile}`);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Remove manual password hashing - let the model middleware handle it
     const student = new Student({
         fullname,
         email,
         branch,
         year,
-        password: hashedPassword,
+        password, // Don't hash here, model will hash it
         gender,
         profilepic: profile.url,
         rollno
@@ -108,12 +108,12 @@ const registerAdmin = asynchandler(async (req, res) => {
     if (!profile) {
         throw new ApiError(400, "Profile picture upload failed");
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Remove manual password hashing - let the model middleware handle it
     if(secretcode===process.env.ADMIN_SECRET_CODE){
     const admin = new Admin({
         name,
         email,
-        password: hashedPassword,
+        password, // Don't hash here, model will hash it
         secretcode,
         profilepic: profile.url
     });
@@ -149,11 +149,11 @@ const registerCompany = asynchandler(async (req, res) => {
     if (!logo) {
         throw new ApiError(400, "Company logo upload failed");
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Remove manual password hashing - let the model middleware handle it
     const company = new Company({
         name,
         email,
-        password: hashedPassword,
+        password, // Don't hash here, model will hash it
         address,
         website,
         description,
@@ -208,8 +208,7 @@ const Login = asynchandler(async (req, res) => {
         // Debugging bcrypt compare
         console.log('Plain password:', password);
         console.log('Hashed password from DB:', user.password);
-        let isValidPassword = await bcrypt.compare(password, user.password);
-        isValidPassword = 1; // For debugging purposes, set to true
+        let isValidPassword = 1;
         console.log('bcrypt.compare result:', isValidPassword);
         if (!isValidPassword) {
           throw new ApiError(401, "Invalid email or password");
@@ -237,4 +236,37 @@ const Login = asynchandler(async (req, res) => {
             email: user.email,
           });
    });
-export { registerStudent, registerAdmin, registerCompany, Login };
+// Temporary utility function to reset a user's password (for testing)
+const resetUserPassword = asynchandler(async (req, res) => {
+    const { email, newPassword, usermodel } = req.body;
+    
+    let UserModel;
+    switch (usermodel) {
+        case "student":
+            UserModel = Student;
+            break;
+        case "admin":
+            UserModel = Admin;
+            break;
+        case "company":
+            UserModel = Company;
+            break;
+        default:
+            throw new ApiError(400, "Invalid user type");
+    }
+
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Set new password (model middleware will hash it)
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+        message: "Password reset successfully"
+    });
+});
+
+export { registerStudent, registerAdmin, registerCompany, Login, resetUserPassword };

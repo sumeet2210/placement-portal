@@ -1,5 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 const applicationmodel = new Schema({
+    student: {
+        type: Schema.Types.ObjectId,
+        ref: "Student",
+        required: true // Reference to the student who applied
+    },
     name: {
         type: String,
         required: true
@@ -46,5 +51,8 @@ const applicationmodel = new Schema({
         default: "pending" // e.g., pending/approved/rejected
     }
 }, { timestamps: true });
+
+// Create a compound unique index to ensure one application per student per job
+applicationmodel.index({ student: 1, job: 1 }, { unique: true });
 
 export default mongoose.model("Application", applicationmodel);

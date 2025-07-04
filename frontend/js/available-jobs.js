@@ -16,15 +16,39 @@ async function fetchJobs() {
   return data.jobs || [];
 }
 
-function renderJobs(jobs, role) {
+async function fetchStudentApplications() {
+  try {
+    const res = await fetch('http://localhost:3001/api/v1/application/my-applications', {
+      credentials: 'include'
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.success ? data.applications : [];
+  } catch (err) {
+    console.error('Error fetching applications:', err);
+    return [];
+  }
+}
+
+async function renderJobs(jobs, role) {
   const tbody = document.getElementById('jobsTableBody');
   tbody.innerHTML = '';
   if (!jobs.length) {
     tbody.innerHTML = '<tr><td colspan="6" class="no-jobs">No jobs available at the moment.</td></tr>';
     return;
   }
+
+  // Fetch student applications to check which jobs they've already applied to
+  let appliedJobIds = [];
+  if (role === 'student') {
+    const applications = await fetchStudentApplications();
+    appliedJobIds = applications.map(app => app.job._id);
+  }
+
   jobs.forEach(job => {
     const tr = document.createElement('tr');
+    const hasApplied = appliedJobIds.includes(job._id);
+    
     tr.innerHTML = `
       <td>${job.title}</td>
       <td>${job.company}</td>
@@ -35,6 +59,8 @@ function renderJobs(jobs, role) {
         ${role === 'admin' ? `
           <button class="apply-btn" onclick="approveJob('${job._id}')">Approve</button>
           <button class="apply-btn" style="background:#ef4444;" onclick="rejectJob('${job._id}')">Reject</button>
+        ` : hasApplied ? `
+          <button class="apply-btn applied" disabled>Already Applied</button>
         ` : `
           <button class="apply-btn" onclick="window.location.href='apply-job.html?jobId=${job._id}'">Apply</button>
         `}
@@ -70,7 +96,7 @@ async function rejectJob(jobId) {
 (async function() {
   const role = getUserRole();
   const jobs = await fetchJobs();
-  renderJobs(jobs, role);
+  await renderJobs(jobs, role);
 })();
 
 // Expose admin functions globally for inline onclick

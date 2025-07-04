@@ -1,5 +1,6 @@
-import Company from "../models/company.models";
-import asynchandler from "express-async-handler";
+import Company from "../models/company.models.js";
+import asynchandler from "../utils/asynchandler.js";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import Job from "../models/job.models.js";
 import { ApiError } from "../utils/apierror.js";

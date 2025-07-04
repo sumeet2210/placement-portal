@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Jobs - Company Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0e7ff 0%, #f0f2f5 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            padding: 32px 24px 40px 24px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        h1 {
+            color: #6366f1;
+            margin: 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+            transform: translateY(-1px);
+        }
+        .btn.back-btn {
+            background: linear-gradient(90deg, #6b7280 0%, #9ca3af 100%);
+        }
+        .btn.back-btn:hover {
+            background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6366f1;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .jobs-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .job-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .job-card:hover {
+            box-shadow: 0 4px 16px rgba(99,102,241,0.1);
+            transform: translateY(-2px);
+        }
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .job-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .status-approved {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .status-rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .job-description {
+            color: #475569;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-small {
+            padding: 6px 14px;
+            font-size: 0.85rem;
+        }
+        .btn-edit {
+            background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+        }
+        .btn-edit:hover {
+            background: linear-gradient(90deg, #047857 0%, #059669 100%);
+        }
+        .btn-delete {
+            background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+        }
+        .btn-delete:hover {
+            background: linear-gradient(90deg, #b91c1c 0%, #dc2626 100%);
+        }
+        .btn-applications {
+            background: linear-gradient(90deg, #7c3aed 0%, #8b5cf6 100%);
+        }
+        .btn-applications:hover {
+            background: linear-gradient(90deg, #6d28d9 0%, #7c3aed 100%);
+        }
+        .no-jobs {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        .no-jobs h3 {
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6366f1;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            .job-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .job-actions {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>My Posted Jobs</h1>
+            <div>
+                <a href="company-dashboard.html" class="btn back-btn">Back to Dashboard</a>
+                <a href="post-job.html" class="btn">Post New Job</a>
+            </div>
+        </div>
+
+        <div class="stats" id="jobStats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalJobs">-</div>
+                <div class="stat-label">Total Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingJobs">-</div>
+                <div class="stat-label">Pending Approval</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="approvedJobs">-</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="rejectedJobs">-</div>
+                <div class="stat-label">Rejected</div>
+            </div>
+        </div>
+
+        <div class="jobs-grid" id="jobsContainer">
+            <div class="loading">Loading your jobs...</div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch and display company's jobs
+        async function loadMyJobs() {
+            try {
+                const response = await fetch('http://localhost:3001/api/v1/company/jobs', {
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to fetch jobs');
+                }
+
+                const jobs = data.jobs || [];
+                displayJobs(jobs);
+                updateStats(jobs);
+
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                document.getElementById('jobsContainer').innerHTML = `
+                    <div class="no-jobs">
+                        <h3>Error Loading Jobs</h3>
+                        <p>${error.message}</p>
+                        <button class="btn" onclick="loadMyJobs()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        function displayJobs(jobs) {
+            const container = document.getElementById('jobsContainer');
+            
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="no-jobs">
+                        <h3>No Jobs Posted Yet</h3>
+                        <p>Start by posting your first job opening!</p>
+                        <a href="post-job.html" class="btn">Post Your First Job</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = jobs.map(job => `
+                <div class="job-card">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">${job.title}</h3>
+                            <div class="job-meta">
+                                <span>📍 ${job.location}</span>
+                                ${job.salary ? `<span>💰 ${job.salary}</span>` : ''}
+                                <span>📅 Posted: ${new Date(job.createdAt).toLocaleDateString()}</span>
+                                ${job.deadline ? `<span>⏰ Deadline: ${new Date(job.deadline).toLocaleDateString()}</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="job-status status-${job.status || 'pending'}">${(job.status || 'pending').toUpperCase()}</span>
+                    </div>
+                    
+                    <div class="job-description">
+                        ${job.description || 'No description provided'}
+                    </div>
+                    
+                    ${job.requirements && job.requirements.length ? `
+                        <div style="margin-bottom: 16px;">
+                            <strong>Requirements:</strong>
+                            <ul style="margin: 8px 0; padding-left: 20px;">
+                                ${job.requirements.map(req => `<li>${req}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="job-actions">
+                        <button class="btn btn-small btn-applications" onclick="viewApplications('${job._id}')">
+                            View Applications
+                        </button>
+                        <button class="btn btn-small btn-edit" onclick="editJob('${job._id}')">
+                            Edit Job
+                        </button>
+                        <button class="btn btn-small btn-delete" onclick="deleteJob('${job._id}', '${job.title}')">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats(jobs) {
+            const totalJobs = jobs.length;
+            const pendingJobs = jobs.filter(job => (job.status || 'pending') === 'pending').length;
+            const approvedJobs = jobs.filter(job => job.status === 'approved').length;
+            const rejectedJobs = jobs.filter(job => job.status === 'rejected').length;
+
+            document.getElementById('totalJobs').textContent = totalJobs;
+            document.getElementById('pendingJobs').textContent = pendingJobs;
+            document.getElementById('approvedJobs').textContent = approvedJobs;
+            document.getElementById('rejectedJobs').textContent = rejectedJobs;
+        }
+
+        // Action functions
+        async function deleteJob(jobId, jobTitle) {
+            if (!confirm(`Are you sure you want to delete "${jobTitle}"? This action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3001/api/v1/company/job/${jobId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Job deleted successfully!');
+                    loadMyJobs(); // Refresh the list
+                } else {
+                    alert(data.message || 'Failed to delete job');
+                }
+            } catch (error) {
+                console.error('Error deleting job:', error);
+                alert('Error deleting job');
+            }
+        }
+
+        function editJob(jobId) {
+            // Redirect to edit page (you can create this later)
+            window.location.href = `edit-job.html?jobId=${jobId}`;
+        }
+
+        function viewApplications(jobId) {
+            // Redirect to applications page (you can create this later)
+            window.location.href = `job-applications.html?jobId=${jobId}`;
+        }
+
+        // Load jobs when page loads
+        document.addEventListener('DOMContentLoaded', loadMyJobs);
+    </script>
+</body>
+</html>

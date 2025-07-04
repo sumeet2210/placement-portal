@@ -84,11 +84,21 @@
       formData.append('github', document.getElementById('github').value);
       formData.append('personalDescription', document.getElementById('personalDescription').value);
       formData.append('phone', document.getElementById('phone').value);
-      // TODO: Add job id if available (e.g., from query param)
+      
+      // Get job ID from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const jobId = urlParams.get('jobId');
+      if (!jobId) {
+        alert('Job ID is missing. Please select a job to apply for.');
+        return;
+      }
+      formData.append('jobId', jobId);
+      
       try {
         const response = await fetch('http://localhost:3001/api/v1/application/apply', {
           method: 'POST',
-          body: formData
+          body: formData,
+          credentials: 'include'
         });
         let data = {};
         try {
@@ -102,7 +112,13 @@
           alert(data.message || 'Application submitted successfully!');
           window.location.href = '/frontend/pages/student-dashboard.html';
         } else {
-          alert(data.message || 'Application failed');
+          // Handle specific error messages
+          if (response.status === 400 && data.message && data.message.includes('already applied')) {
+            alert('You have already applied for this job. You can only apply once per job.');
+            window.location.href = '/frontend/pages/available-jobs.html';
+          } else {
+            alert(data.message || 'Application failed');
+          }
         }
       } catch (err) {
         alert('Error connecting to server');

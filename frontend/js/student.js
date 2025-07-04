@@ -3,7 +3,7 @@ async function loadAppliedJobs() {
     const appliedJobsList = document.getElementById('appliedJobsList');
     appliedJobsList.innerHTML = '<li>Loading...</li>';
     try {
-        const res = await fetch('http://localhost:3001/api/v1/student/applications', {
+        const res = await fetch('http://localhost:3001/api/v1/application/my-applications', {
             credentials: 'include', // Ensure cookies are sent with the request
         });
         const data = await res.json();
@@ -18,8 +18,12 @@ async function loadAppliedJobs() {
             const li = document.createElement('li');
             li.className = 'applied-item';
             li.innerHTML = `
-                <span><strong>${job.title || 'Job Title N/A'}</strong> at ${job.company || 'Company N/A'}</span>
-                <span class="status">${app.status}</span>
+                <div>
+                    <strong>${job.title || 'Job Title N/A'}</strong> at ${job.company || 'Company N/A'}
+                    <br>
+                    <small>Applied on: ${new Date(app.createdAt).toLocaleDateString()}</small>
+                </div>
+                <span class="status status-${app.status}">${app.status.toUpperCase()}</span>
             `;
             appliedJobsList.appendChild(li);
         });
