@@ -342,7 +342,7 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors & Contributors
 
-- **Developer** - *Full Stack Development* - [GitHub Profile](https://github.com/yourusername)
+- **Developer** - *Full Stack Development* - [GitHub Profile](https://github.com/sumeet2210)
 
 ## 🙏 Acknowledgments
 
