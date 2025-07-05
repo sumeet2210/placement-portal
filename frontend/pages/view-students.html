@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View All Students - Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Override global styles for dashboard */
+    html, body {
+      font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      height: 100% !important;
+      width: 100% !important;
+      overflow-x: hidden !important;
+      display: block !important;
+      align-items: unset !important;
+      justify-content: unset !important;
+    }
+
+    .dashboard-container {
+      min-height: 100vh;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    /* Header Styles */
+    .dashboard-header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .hamburger-btn {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .hamburger-btn span {
+      display: block;
+      height: 3px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .page-title {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logout-btn {
+      background: rgba(220, 53, 69, 0.2);
+      color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .logout-btn:hover {
+      background: rgba(220, 53, 69, 0.3);
+      border-color: rgba(220, 53, 69, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    /* Sidebar Styles */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 280px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1000;
+      transition: left 0.3s ease;
+      padding-top: 80px;
+      box-shadow: 8px 0 32px rgba(31, 38, 135, 0.37);
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .menu-item {
+      display: block;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      padding: 15px 25px;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 500;
+    }
+
+    .menu-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      padding-left: 35px;
+    }
+
+    .menu-item.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border-left: 4px solid rgba(255, 255, 255, 0.8);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    /* Statistics Cards */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(31, 38, 135, 0.5);
+    }
+
+    .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.95);
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-label {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+
+    /* Controls Section */
+    .controls-section {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+
+    .controls-title {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-box, .filter-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      min-width: 200px;
+    }
+
+    .search-box::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .search-box:focus, .filter-select:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .filter-select option {
+      background: rgba(31, 38, 135, 0.9);
+      color: white;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary {
+      background: rgba(40, 167, 69, 0.2);
+      border-color: rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: rgba(40, 167, 69, 0.3);
+      border-color: rgba(40, 167, 69, 0.5);
+      box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(108, 117, 125, 0.2);
+      border-color: rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(108, 117, 125, 0.3);
+      border-color: rgba(108, 117, 125, 0.5);
+      box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+    }
+
+    /* Students Table */
+    .students-table-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+
+    .table-header {
+      padding: 20px 25px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-title {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .students-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+
+    .students-table th {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.95);
+      padding: 15px 20px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .students-table td {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+      vertical-align: middle;
+    }
+
+    .students-table tr:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .student-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .student-name {
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .student-email {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-active {
+      background: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+      border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    .status-inactive {
+      background: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    .status-pending {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .btn-info {
+      background: rgba(23, 162, 184, 0.2);
+      border-color: rgba(23, 162, 184, 0.3);
+      color: #17a2b8;
+    }
+
+    .btn-info:hover {
+      background: rgba(23, 162, 184, 0.3);
+      border-color: rgba(23, 162, 184, 0.5);
+      box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+    }
+
+    .btn-warning {
+      background: rgba(255, 193, 7, 0.2);
+      border-color: rgba(255, 193, 7, 0.3);
+      color: #ffc107;
+    }
+
+    .btn-warning:hover {
+      background: rgba(255, 193, 7, 0.3);
+      border-color: rgba(255, 193, 7, 0.5);
+      box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    /* Loading and Error States */
+    .loading-state, .error-state, .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255, 255, 255, 0.8);
+      font-style: italic;
+    }
+
+    .error-state {
+      color: rgba(220, 53, 69, 0.8);
+    }
+
+    .loading-spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        margin: 0 !important;
+        padding: 20px !important;
+      }
+
+      .dashboard-container {
+        background: white !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      .dashboard-header,
+      .side-menu,
+      .controls-section,
+      .hamburger-btn,
+      .logout-btn,
+      .action-buttons,
+      .action-btns {
+        display: none !important;
+      }
+
+      .main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .page-title {
+        color: black !important;
+        text-shadow: none !important;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .stats-container {
+        display: flex !important;
+        justify-content: space-around;
+        margin-bottom: 30px;
+        page-break-inside: avoid;
+      }
+
+      .stat-card {
+        background: white !important;
+        border: 2px solid #333 !important;
+        border-radius: 10px !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        flex: 1;
+        margin: 0 10px;
+      }
+
+      .stat-number {
+        color: black !important;
+        text-shadow: none !important;
+      }
+
+      .stat-label {
+        color: #666 !important;
+      }
+
+      .students-table-container {
+        background: white !important;
+        border: 2px solid #333 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        page-break-inside: auto;
+      }
+
+      .table-header {
+        border-bottom: 2px solid #333 !important;
+      }
+
+      .table-title {
+        color: black !important;
+        text-shadow: none !important;
+      }
+
+      .students-table {
+        border-collapse: collapse !important;
+      }
+
+      .students-table th {
+        background: #f8f9fa !important;
+        color: black !important;
+        border: 1px solid #333 !important;
+        text-shadow: none !important;
+      }
+
+      .students-table td {
+        color: black !important;
+        border: 1px solid #333 !important;
+      }
+
+      .students-table tr:hover {
+        background: white !important;
+      }
+
+      .student-avatar {
+        border: 1px solid #333 !important;
+      }
+
+      .student-name {
+        color: black !important;
+      }
+
+      .student-email {
+        color: #666 !important;
+      }
+
+      .status-badge {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #333 !important;
+      }
+
+      /* Hide action columns when printing */
+      .students-table th:last-child,
+      .students-table td:last-child {
+        display: none !important;
+      }
+
+      /* Print page breaks */
+      .stats-container {
+        page-break-after: avoid;
+      }
+
+      .students-table-container {
+        page-break-before: avoid;
+      }
+
+      /* Print footer */
+      @page {
+        margin: 1in;
+        @bottom-center {
+          content: "Generated on " attr(data-print-date) " | Page " counter(page);
+        }
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 20px 15px;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+
+      .controls-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box, .filter-select {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .action-buttons {
+        justify-content: center;
+      }
+
+      .students-table-container {
+        overflow-x: auto;
+      }
+
+      .students-table {
+        min-width: 600px;
+      }
+
+      .students-table th,
+      .students-table td {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+
+      .header-right {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-header {
+        padding: 15px 20px;
+      }
+
+      .main-content {
+        padding: 15px 10px;
+      }
+
+      .controls-section,
+      .students-table-container {
+        padding: 15px;
+      }
+
+      .stat-card {
+        padding: 20px 15px;
+      }
+
+      .stat-number {
+        font-size: 28px;
+      }
+
+      .btn {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <h1 class="page-title">View All Students</h1>
+      </div>
+      <div class="header-right">
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="side-menu" id="sideMenu">
+      <a href="admin-dashboard.html" class="menu-item">📊 Dashboard</a>
+      <a href="view-students.html" class="menu-item active">👨‍🎓 View Students</a>
+      <a href="approve-company.html" class="menu-item">🏢 Approve Companies</a>
+      <a href="available-jobs.html" class="menu-item">💼 Manage Jobs</a>
+      <a href="admin-dashboard.html#applications" class="menu-item">📄 Applications</a>
+      <a href="admin-dashboard.html#reports" class="menu-item">📈 Reports</a>
+      <a href="admin-dashboard.html#settings" class="menu-item">⚙️ Settings</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Statistics Cards -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-number" id="totalStudents">-</div>
+          <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="activeStudents">-</div>
+          <div class="stat-label">Active Students</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="placedStudents">-</div>
+          <div class="stat-label">Placed Students</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="averageCgpa">-</div>
+          <div class="stat-label">Average CGPA</div>
+        </div>
+      </div>
+
+      <!-- Controls Section -->
+      <div class="controls-section">
+        <h3 class="controls-title">Search & Filter Students</h3>
+        <div class="controls-row">
+          <input type="text" class="search-box" id="searchBox" placeholder="Search by name, roll number, or email...">
+          <select class="filter-select" id="yearFilter">
+            <option value="">All Years</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+          </select>
+          <select class="filter-select" id="branchFilter">
+            <option value="">All Branches</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Civil">Civil</option>
+          </select>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="refreshBtn">🔄 Refresh</button>
+          <button class="btn btn-secondary" onclick="exportStudents()">📊 Export CSV</button>
+          <button class="btn btn-secondary" onclick="printStudents()">🖨️ Print</button>
+        </div>
+      </div>
+
+      <!-- Students Table -->
+      <div class="students-table-container">
+        <div class="table-header">
+          <h3 class="table-title">Students List</h3>
+          <span class="table-info" id="tableInfo">Loading...</span>
+        </div>
+        <table class="students-table">
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Name & Email</th>
+              <th>Roll Number</th>
+              <th>Year</th>
+              <th>Branch</th>
+              <th>CGPA</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody">
+            <tr class="loading-state">
+              <td colspan="8">
+                <div class="loading-spinner"></div>
+                Loading students data...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

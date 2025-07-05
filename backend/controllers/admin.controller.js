@@ -1,5 +1,6 @@
 import asynchandler from "../utils/asynchandler.js";
 import Admin from "../models/admin.models.js";
+import Student from "../models/student.models.js";
 
 const getPendingCompanies = asynchandler(async (req, res) => {
     const pendingCompanies = await req.db.Company.find({ status: "pending" });
@@ -142,11 +143,49 @@ const getAllApplications = asynchandler(async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch applications", error: error.message });
     }
 });
+const getAllStudents = asynchandler(async (req, res) => {
+    try {
+        console.log('📋 Fetching all students from database...');
+        const rawStudents = await Student.find();
+        console.log('👥 Found', rawStudents.length, 'students');
+        
+        // Map the database fields to frontend-expected field names
+        const students = rawStudents.map(student => ({
+            _id: student._id,
+            name: student.fullname,           // Map fullname -> name
+            email: student.email,
+            rollNumber: student.rollno,       // Map rollno -> rollNumber
+            branch: student.branch,
+            year: student.year,
+            gender: student.gender,
+            profilepic: student.profilepic,
+            status: 'active',                 // Default status
+            usermodel: student.usermodel,
+            cgpa: student.cgpa || 'N/A'       // Add CGPA if available
+        }));
+        
+        console.log('✅ Mapped students:', students);
+        
+        res.status(200).json({ 
+            success: true, 
+            students: students,
+            message: `Retrieved ${students.length} students successfully` 
+        });
+    } catch (error) {
+        console.error('❌ Error fetching students:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Failed to fetch students", 
+            error: error.message 
+        });
+    }
+});
 export {
     getPendingCompanies,
     approveCompany,
     rejectCompany,
     getPendingJobs,
+    getAllStudents,
     approveJob,
     rejectJob,
     getAllApplications

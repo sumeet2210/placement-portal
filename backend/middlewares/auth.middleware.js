@@ -32,12 +32,23 @@ export const verifyJWT = asynchandler(async (req, res, next) => {
 
 // Middleware to check if the authenticated user is an admin
 export function isAdmin(req, res, next) {
+  console.log('🔍 Checking admin permissions...');
+  console.log('👤 User object:', req.user);
+  console.log('🏷️ User model:', req.user?.usermodel);
+  
   if (!req.user) {
+    console.log('❌ No user found in request');
     return res.status(401).json({ success: false, message: 'Unauthorized: No user info found.' });
   }
-  if (req.user.role && req.user.role.toLowerCase() === 'admin') {
+  
+  // Check if user is admin using usermodel field (not role)
+  if (req.user.usermodel && req.user.usermodel.toLowerCase() === 'admin') {
+    console.log('✅ Admin access granted');
     return next();
   }
+  
+  console.log('❌ Access denied - not an admin');
+  console.log('🏷️ Expected: admin, Got:', req.user.usermodel);
   return res.status(403).json({ success: false, message: 'Access denied: Admins only.' });
 }
 export const isAuthenticated = asynchandler(async (req, res, next) => {

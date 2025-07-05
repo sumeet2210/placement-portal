@@ -1,5 +1,5 @@
 import express from "express";
-import { approveCompany, rejectCompany, getPendingCompanies, getAdminProfile } from "../controllers/admin.controller.js";
+import { approveCompany, rejectCompany, getPendingCompanies, getAdminProfile ,getAllStudents } from "../controllers/admin.controller.js";
 // import { getAllJobs, getAllStudents, getAllApplications } from "../controllers/admin.controller.js";
 import { isAdmin, verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -34,5 +34,5 @@ router.post("/logout", (req, res) => {
     res.clearCookie("refreshtoken");
     res.status(200).json({ success: true, message: "Logged out successfully" });
 });
-
+router.get("/allstudents", verifyJWT, isAdmin, getAllStudents);
 export default router;
