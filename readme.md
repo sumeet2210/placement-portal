@@ -365,6 +365,12 @@ We welcome contributions to the Placement Portal! Here's how you can help:
 - **Open Source Community** - For inspiration and code examples
 - **Design Community** - For glassmorphism design trends
 
+## 📞 Support & Contact
+
+- **Email**: your-email@example.com
+- **Issues**: [GitHub Issues](https://github.com/yourusername/placement-portal/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/placement-portal/discussions)
+
 ## 🌟 Show Your Support
 
 If this project helped you or you found it interesting, please consider:
