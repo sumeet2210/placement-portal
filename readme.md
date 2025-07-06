@@ -281,17 +281,33 @@ PUT  /api/v1/application/update       # Update application status
 
 ## 📸 Screenshots
 
+### Homepage
+![Homepage](homepage.png)
+*Modern landing page with glassmorphism design*
+
 ### Admin Dashboard
-![Admin Dashboard](screenshots/admin-dashboard.png)
-*Comprehensive admin control panel with glassmorphism design*
+![Admin Dashboard](admindashboard.png)
+*Comprehensive admin control panel with analytics and management tools*
 
 ### Student Management
-![Student Management](screenshots/student-management.png)
+![Student Management](view-students.png)
 *Advanced student filtering, search, and export functionality*
 
+### Student Dashboard
+![Student Dashboard](student-dashboard.png)
+*Student portal with job listings and application tracking*
+
 ### Company Dashboard
-![Company Dashboard](screenshots/company-dashboard.png)
+![Company Dashboard](company-dashboard.png)
 *Modern company interface for job posting and applicant management*
+
+### Job Posting
+![Job Posting](post-job.png)
+*Intuitive job creation form for companies*
+
+### Student Registration
+![Student Registration](student-registeration.png)
+*Clean and modern student registration interface*
 
 ## 🔄 Recent Updates
 
@@ -336,13 +352,10 @@ We welcome contributions to the Placement Portal! Here's how you can help:
 - [ ] Implement chat system between students and companies
 - [ ] Add placement statistics and success tracking
 
-## 📝 License
-
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
 
 ## 👥 Authors & Contributors
 
-- **Developer** - *Full Stack Development* - [GitHub Profile](https://github.com/yourusername)
+- **Developer** - *Full Stack Development* - [GitHub Profile](https://github.com/sumeet2210)
 
 ## 🙏 Acknowledgments
 
@@ -351,12 +364,6 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 - **Express.js Contributors** - For robust web framework
 - **Open Source Community** - For inspiration and code examples
 - **Design Community** - For glassmorphism design trends
-
-## 📞 Support & Contact
-
-- **Email**: your-email@example.com
-- **Issues**: [GitHub Issues](https://github.com/yourusername/placement-portal/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/placement-portal/discussions)
 
 ## 🌟 Show Your Support
 

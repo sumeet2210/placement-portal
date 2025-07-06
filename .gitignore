@@ -31,3 +31,11 @@ coverage/
 
 # Public uploads (if not needed in repo)
 backend/public/
+
+# Screenshots and images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
